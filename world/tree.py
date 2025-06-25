@@ -6,10 +6,10 @@ class Tree(pygame.sprite.Sprite):
         super().__init__()
         try:
             self.image = pygame.image.load("assets/images/tree.png").convert_alpha()
-            self.image = pygame.transform.scale(self.image, (80, 120)) # Altura 120
+            self.image = pygame.transform.scale(self.image, (180, 120)) # Altura 120
         except pygame.error:
             print("Erro: Imagem da árvore (tree.png) não encontrada. Usando um retângulo verde como placeholder.")
-            self.image = pygame.Surface((80, 120), pygame.SRCALPHA)
+            self.image = pygame.Surface((180, 120), pygame.SRCALPHA)
             self.image.fill((0, 100, 0)) 
             pygame.draw.rect(self.image, (139, 69, 19), (25, 90, 30, 30)) 
 

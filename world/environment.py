@@ -41,31 +41,27 @@ class Environment:
         Atualiza a lógica de todos os elementos do ambiente.
         """
         self.monsters.update() 
+        self.coins.update() # NOVO: Atualiza a física das moedas
 
         # Remover árvores cortadas e gerar moedas no local da árvore
         for tree in self.trees.copy(): 
             if tree.is_cut:
-                # Gerar algumas moedas onde a árvore estava
+                # Gerar algumas moedas um pouco acima de onde a árvore estava, para que caiam
                 for _ in range(tree.coins_on_cut):
                     coin_x = tree.rect.x + random.randint(0, tree.rect.width - 30)
-                    # Moeda deve aparecer no ar, talvez um pouco acima de onde a árvore estava
-                    # Ajuste este Y para que a moeda não caia abaixo do chão imediatamente
-                    coin_y = tree.rect.y + random.randint(tree.rect.height // 2, tree.rect.height - 30) # No meio ou base da árvore
+                    coin_y = tree.rect.y + (tree.rect.height // 4) # Mais acima na árvore
                     self.coins.add(Coin(coin_x, coin_y))
                 self.trees.remove(tree) 
 
         # Remover monstros derrotados e gerar moedas
         for monster in self.monsters.copy():
             if not monster.is_alive:
-                 # Gerar moedas ao derrotar monstro
                 for _ in range(monster.coins_on_defeat):
                     coin_x = monster.rect.x + random.randint(0, monster.rect.width - 30)
-                    # Moeda deve aparecer no ar, talvez um pouco acima do monstro
-                    coin_y = monster.rect.y + random.randint(monster.rect.height // 2, monster.rect.height - 30)
+                    coin_y = monster.rect.y + (monster.rect.height // 4) # Mais acima no monstro
                     self.coins.add(Coin(coin_x, coin_y))
                 self.monsters.remove(monster) 
 
-    # ... (restante da classe Environment) ...
 
     def check_collisions(self, player_rect: pygame.Rect, player_sword_rect: pygame.Rect, player_damage: int) -> None:
         """
