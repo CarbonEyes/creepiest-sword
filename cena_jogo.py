@@ -7,26 +7,18 @@ from world.coin import Coin
 class CenaJogo(Cena):
     def __init__(self, jogo):
         self.jogo = jogo
-
-        # A altura do jogador é 70 (se usando placeholder ou escala)
-        player_height = 70 
-        # O Y do topleft do jogador deve ser ground_y_top - player_height
-        ground_y_top = jogo.altura - 50 #
+        
+        player_height = 70
+        ground_y_top = jogo.altura - 50 
         player_y = ground_y_top - player_height
 
-        self.player = Player(jogo.largura // 2 - (50//2), player_y) #
-        # O cálculo acima já define o topleft Y corretamente. Não precisa mais do self.player.rect.bottom = jogo.altura - 50
-        # A linha self.player.rect.bottom = jogo.altura - 50 no __init__ de CenaJogo é redundante
-        # se o y for calculado como acima. Mantenha apenas uma das abordagens.
-        # Se você usar o y = ground_y_top - player_height, a linha self.player.rect.bottom = jogo.altura - 50
-        # não é mais necessária, pois o player já estará posicionado corretamente.
-
-        # Ajusta a posição X para o centro da largura da tela.
-        # O X passado para Player deve ser o topleft, então subtrai metade da largura do player (50//2).
-        self.player.rect.x = jogo.largura // 2 - (self.player.rect.width // 2)
-
+        self.player = Player(jogo.largura // 2 - (50//2), player_y) 
         self.environment = Environment()
         self.player_sword_damage: int = 1 
+        
+        self.monster_attack_cooldown: int = 60 # Cooldown em frames para monstros atacarem o jogador
+        self.monster_last_attack_time: int = 0
+ 
 
     def atualizar(self, eventos: list) -> None:
         """
@@ -68,6 +60,18 @@ class CenaJogo(Cena):
                 if coins_gained > 0:
                     self.player.collect_coin(coins_gained)
 
+            # Colisão de monstros com o jogador (monstros causando dano ao jogador)
+        # Verifica colisões apenas a cada 'monster_attack_cooldown' frames para evitar dano instantâneo
+        current_time = pygame.time.get_ticks() # Tempo atual em milissegundos
+
+        #Converter cooldown de frames para milissegundos para usar com get_ticks()
+        cooldown_ms = self.monster_attack_cooldown * (1000 / 60) # Considerando 60 FPS
+
+        if self.player.health <= 0:
+            print("GAME OVER!")
+            from cena_menu import CenaMenu # Importação local para evitar dependência circular
+            self.jogo.mudar_cena(CenaMenu(self.jogo)) # Volta para o menu 
+        
         # Colisão do jogador com moedas
         collected_coins = pygame.sprite.spritecollide(self.player, self.environment.coins, True) # 'True' remove a moeda ao colidir
         for coin in collected_coins:
@@ -105,3 +109,6 @@ class CenaJogo(Cena):
         # Exibir vida do jogador (HUD temporário)
         health_text = font.render(f"Vida: {self.player.health}", True, (0, 0, 0))
         tela.blit(health_text, (10, 90))
+
+        # Lógica de Game Over (se a vida do jogador chegar a 0)
+       

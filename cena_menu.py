@@ -91,7 +91,7 @@ class CenaMenu(Cena):
         
         # Desenha título
         fonte_titulo = pygame.font.SysFont('Arial', 48, bold=True)
-        titulo = fonte_titulo.render("CYBERBUG 2077", True, (0, 0, 0))
+        titulo = fonte_titulo.render("CREEPIEST SWORD", True, (0, 0, 0))
         tela.blit(titulo, (self.jogo.largura//2 - titulo.get_width()//2, 80))
         
         # Desenha botões

@@ -14,7 +14,7 @@ from cena_jogo import CenaJogo # Importa a nova CenaJogo
 class Jogo:
     """Classe principal que controla o loop do jogo e gerencia as cenas"""
     
-    def __init__(self, largura: int = 800, altura: int = 600, titulo: str = "Meu Jogo POO"):
+    def __init__(self, largura: int = 1280, altura: int = 720, titulo: str = "Meu Jogo POO"):
         """
         Inicializa o jogo com configurações básicas
         
